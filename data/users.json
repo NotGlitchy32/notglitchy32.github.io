@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "username": "user1",
+      "donationAmount": 0.0000000000
+    },
+    {
+      "username": "admin-xeno1",
+      "donationAmount": 0.0000000000
+    }
+  ]
+}
