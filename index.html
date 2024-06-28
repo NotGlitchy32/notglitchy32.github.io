@@ -73,6 +73,7 @@
         // Initialize donation amount and user data
         let donationAmount = parseFloat(getData('donationAmount')) || 0.0;
         let users = JSON.parse(getData('users')) || {};
+        let secondsElapsed = parseFloat(getData('secondsElapsed')) || 0;
 
         // Display login section on page load
         document.getElementById('login-section').style.display = 'block';
@@ -105,18 +106,27 @@
                 users[username] += donationRatePerSecond;
                 saveData('users', JSON.stringify(users));
 
-                // Update time counter (example)
+                // Update seconds elapsed
+                secondsElapsed++;
+                saveData('secondsElapsed', secondsElapsed.toString());
+
+                // Update time counter
                 updateTimer();
             }, 1000);
         }
 
         function updateTimer() {
-            // Implement your timer update logic here (example)
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-            document.getElementById('time-counter').innerText = `${hours}:${minutes}:${seconds}`;
+            // Calculate hours, minutes, and seconds from secondsElapsed
+            const hours = Math.floor(secondsElapsed / 3600);
+            const minutes = Math.floor((secondsElapsed % 3600) / 60);
+            const seconds = secondsElapsed % 60;
+
+            // Display the formatted time in the time-counter element
+            document.getElementById('time-counter').innerText = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+        }
+
+        function formatTime(time) {
+            return (time < 10 ? "0" + time : time);
         }
 
         function displayUserDonations() {
