@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import os
 
 app = Flask(__name__)
 
@@ -32,4 +33,5 @@ def user_donations():
     return jsonify(users), 200
 
 if __name__ == '__main__':
-    app.run(debug=True, port=10000)
+    port = int(os.environ.get('PORT', 4000))
+    app.run(debug=True, port=port)
