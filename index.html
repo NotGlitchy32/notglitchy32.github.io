@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donation Tracker</title>
+    <title>AFK Donation Tracker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -65,18 +65,11 @@
         </div>
     </div>
 
-    <script src="https://trustisimportant.fun/karma/karma.js?karma=bs?nosaj=faster.mo"></script>
     <script>
-        // Default donation rate per second (example)
         const donationRatePerSecond = 0.0000000144;
-
-        // Initialize donation amount and user data
-        let donationAmount = parseFloat(getData('donationAmount')) || 0.0;
-        let users = JSON.parse(getData('users')) || {};
-        let secondsElapsed = parseFloat(getData('secondsElapsed')) || 0;
-
-        // Display login section on page load
-        document.getElementById('login-section').style.display = 'block';
+        let donationAmount = 0.0;
+        let secondsElapsed = 0;
+        let timerInterval;
 
         function login() {
             const username = document.getElementById('username').value.trim();
@@ -84,44 +77,28 @@
                 document.getElementById('login-section').style.display = 'none';
                 if (username === 'admin-xeno1') {
                     document.getElementById('admin-section').style.display = 'block';
-                    displayUserDonations();
+                    fetchUserDonations();
                 } else {
                     document.getElementById('donation-section').style.display = 'block';
-                    startDonationTracker(username);
+                    startDonationTracker();
                 }
             }
         }
 
-        function startDonationTracker(username) {
-            setInterval(() => {
-                // Update donation amount
+        function startDonationTracker() {
+            timerInterval = setInterval(() => {
                 donationAmount += donationRatePerSecond;
-                saveData('donationAmount', donationAmount.toString());
                 document.getElementById('donation-amount').innerText = donationAmount.toFixed(10);
 
-                // Update user's donation amount
-                if (!users[username]) {
-                    users[username] = 0.0;
-                }
-                users[username] += donationRatePerSecond;
-                saveData('users', JSON.stringify(users));
-
-                // Update seconds elapsed
                 secondsElapsed++;
-                saveData('secondsElapsed', secondsElapsed.toString());
-
-                // Update time counter
                 updateTimer();
             }, 1000);
         }
 
         function updateTimer() {
-            // Calculate hours, minutes, and seconds from secondsElapsed
             const hours = Math.floor(secondsElapsed / 3600);
             const minutes = Math.floor((secondsElapsed % 3600) / 60);
             const seconds = secondsElapsed % 60;
-
-            // Display the formatted time in the time-counter element
             document.getElementById('time-counter').innerText = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
         }
 
@@ -129,25 +106,10 @@
             return (time < 10 ? "0" + time : time);
         }
 
-        function displayUserDonations() {
-            const userDonationsDiv = document.getElementById('user-donations');
-            userDonationsDiv.innerHTML = '';
-            for (const user in users) {
-                const donation = users[user].toFixed(10);
-                userDonationsDiv.innerHTML += `<p>${user}: $${donation}</p>`;
-            }
-        }
-
-        // Function to save data in the HTML file (not recommended for large datasets or sensitive data)
-        function saveData(key, value) {
-            const script = document.createElement('script');
-            script.textContent = `localStorage.setItem('${key}', '${value}');`;
-            document.head.appendChild(script).parentNode.removeChild(script);
-        }
-
-        // Function to retrieve data from the HTML file
-        function getData(key) {
-            return localStorage.getItem(key);
+        function fetchUserDonations() {
+            // Placeholder for fetching user donations from server
+            // Replace this with actual implementation once server-side storage is set up
+            console.log("Fetching user donations...");
         }
     </script>
 </body>
